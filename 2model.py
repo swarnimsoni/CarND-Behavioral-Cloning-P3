@@ -12,7 +12,7 @@ with open('./data/driving_log.csv') as csvfile:
     for i_line in reader:
         samples.append(i_line)
         #print(lines[0])
-print("Found {} samples".format(len(samples)))
+#print("Found {} samples".format(len(samples)))
 
 from sklearn.model_selection import train_test_split
 train_samples, validation_samples = train_test_split(samples, test_size=0.2)
@@ -22,7 +22,7 @@ train_samples, validation_samples = train_test_split(samples, test_size=0.2)
 steeringAngles=[]
 images = []
 baseDir = './data/IMG/'
-camera_correction_factor = 0.15
+camera_correction_factor = 0.20
 camera_angle_factor = [0,+1,-1]
 #for i_line in samples:        
 #    # use images from all cameras, center, left and right
@@ -120,7 +120,7 @@ model.compile(loss='mse', optimizer='adam')
 #model = load_model('model.h5')
 #history_object= model.fit(X_train, y_train, validation_split=0.2, shuffle=True, nb_epoch=5,verbose=1)
 
-history_object=model.fit_generator(train_generator, samples_per_epoch= len(train_samples)//100, validation_data=validation_generator, nb_val_samples=len(validation_samples)//100, nb_epoch=1)
+history_object=model.fit_generator(train_generator, samples_per_epoch= len(train_samples), validation_data=validation_generator, nb_val_samples=len(validation_samples), nb_epoch=1)
 model.save('2model.h5')
 # plot loss
 plt.plot(history_object.history['loss'])

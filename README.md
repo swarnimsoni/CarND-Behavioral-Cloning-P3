@@ -36,25 +36,24 @@ As suggested in video lectures, I started with a powerful architecture i.e. Nvid
 
 | Layer                 |     Description                               |
 |:---------------------:|:---------------------------------------------:|
-| Input                 | 160x320x3 BRG image                             |
-| Crop                 | 160x320x3 BRG image to 90x320x3 BRG image	  |
+| Input                 | 66x200x3 BRG image                             |
 | Normalization         | pixel varies between [-0.5,0.5]                             |
-| Convolution 5x5       | 2x2 stride, valid padding, outputs 43x158x24   |
+| Convolution 5x5       | 2x2 stride, valid padding, outputs 31x98x24   |
 | RELU                  |                                               |
 | Droput                | 0.5                                          |
-| Convolution 5x5       | 2x2 stride, valid padding, outputs 43x158x24   |
+| Convolution 5x5       | 2x2 stride, valid padding, outputs 14x47x36   |
 | RELU                  |                                               |
 | Droput                | 0.5                                          |
-| Convolution 5x5       | 2x2 stride, valid padding, outputs 20x77x36   |
+| Convolution 5x5       | 1x1 stride, valid padding, outputs 5x22x48   |
 | RELU                  |                                               |
 | Droput                | 0.5                                          |
-| Convolution 3x3       | 1x1 stride, valid padding, outputs 8x37x48   |
+| Convolution 3x3       | 1x1 stride, valid padding, outputs 3x20x64   |
 | RELU                  |                                               |
 | Droput                | 0.5                                          |
-| Convolution 3x3       | 1x1 stride, valid padding, outputs 6x35x64   |
+| Convolution 3x3       | 1x1 stride, valid padding, outputs 1x18x64   |
 | RELU                  |                                               |
 | Droput                | 0.5                                          |
-| Flatten               | outputs 8448                                   |
+| Flatten               | outputs 1152                                   |
 | Fully Connected Layer | outputs 1164                                  |
 | Fully Connected Layer | outputs 100                                  |
 | Fully Connected Layer | outputs 50                                  |
