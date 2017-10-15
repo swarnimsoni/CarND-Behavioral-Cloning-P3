@@ -30,7 +30,7 @@ camera_angle_factor = [0,+1,-1]
 #        # add steering angle according to which camera it came from i.e. center, left or right
 #        steeringAngles.append(float(i_line[3])+camera_correction_factor*camera_angle_factor[i])
 
-
+# this generator generates 6 times the batch size
 def generator(samples, batch_size=32):
     num_samples = len(samples)
     while 1: # Loop forever so the generator never terminates
@@ -106,10 +106,6 @@ def createNVidiaModel(dropOutRate=0.5):
 
 #model = Sequential()
 
-# TODO: add image generators
-# TODO: flip images
-
-# TODO: crop images, use lowest reolution images also
 #60 pixels from top
 #25 pixels from below
 # before cropping, image size = (160,320)
@@ -125,8 +121,7 @@ def createNVidiaModel(dropOutRate=0.5):
 #model.compile(loss='mse', optimizer='adam')
 model = load_model('model.h5')
 #history_object= model.fit(X_train, y_train, validation_split=0.2, shuffle=True, nb_epoch=5,verbose=1)
-history_object=model.fit_generator(train_generator, samples_per_epoch= len(train_samples), validation_data=validation_generator, nb_val_samples=len(validation_samples), nb_epoch=3)
-
+history_object=model.fit_generator(train_generator, samples_per_epoch= len(train_samples)//4, validation_data=validation_generator, nb_val_samples=len(validation_samples)//4, nb_epoch=3)
 
 # plot loss
 plt.plot(history_object.history['loss'])

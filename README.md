@@ -2,9 +2,13 @@
 
 [![Udacity - Self-Driving Car NanoDegree](https://s3.amazonaws.com/udacity-sdc/github/shield-carnd.svg)](http://www.udacity.com/drive)
 
-Overview
+
+[image1]: ./examples/nVidia_model.png "Model Visualization"
+
+Introduction
 ---
 
+The objective of this project was to apply deep learning skill/tools to build a model that can drive on road (in simulator) without human intervention.
 I have to admit, this project turns out to be most satisfying project so far. Watching my trained model to smoothly go over the track, was enjoyable.
 
 This repository contains starting files for the Behavioral Cloning Project.
@@ -15,14 +19,56 @@ We have provided a simulator where you can steer a car around a track for data c
 
 We also want you to create a detailed writeup of the project. Check out the [writeup template](https://github.com/udacity/CarND-Behavioral-Cloning-P3/blob/master/writeup_template.md) for this project and use it as a starting point for creating your own writeup. The writeup can be either a markdown file or a pdf document.
 
-To meet specifications, the project will require submitting five files: 
-* model.py (script used to create and train the model)
-* drive.py (script to drive the car - feel free to modify this file)
+Files submitted
+---
+
+To meet specifications, the project includes following five files: 
+* model.py 
+* drive.py 
 * model.h5 (a trained Keras model)
-* a report writeup file (either markdown or pdf)
+* a report writeup file (writeup.md)
 * video.mp4 (a video recording of your vehicle driving autonomously around the track for at least one full lap)
 
-This README file describes how to output the video in the "Details About Files In This Directory" section.
+
+Model architecture
+---
+As suggested in video lectures, I started with a powerful architecture i.e. Nvidia architecture. Following is exact details of each layer and its type:
+
+| Layer                 |     Description                               |
+|:---------------------:|:---------------------------------------------:|
+| Input                 | 160x320x3 BRG image                             |
+| Crop                 | 160x320x3 BRG image to 90x320x3 BRG image	  |
+| Normalization         | pixel varies between [-0.5,0.5]                             |
+| Convolution 5x5       | 2x2 stride, valid padding, outputs 43x158x24   |
+| RELU                  |                                               |
+| Droput                | 0.5                                          |
+| Convolution 5x5       | 2x2 stride, valid padding, outputs 43x158x24   |
+| RELU                  |                                               |
+| Droput                | 0.5                                          |
+| Convolution 5x5       | 2x2 stride, valid padding, outputs 20x77x36   |
+| RELU                  |                                               |
+| Droput                | 0.5                                          |
+| Convolution 3x3       | 1x1 stride, valid padding, outputs 8x37x48   |
+| RELU                  |                                               |
+| Droput                | 0.5                                          |
+| Convolution 3x3       | 1x1 stride, valid padding, outputs 6x35x64   |
+| RELU                  |                                               |
+| Droput                | 0.5                                          |
+| Flatten               | outputs 8448                                   |
+| Fully Connected Layer | outputs 1164                                  |
+| Fully Connected Layer | outputs 100                                  |
+| Fully Connected Layer | outputs 50                                  |
+| Fully Connected Layer | outputs 1                                 |
+
+Training the model
+---
+
+I have trained the model in multiple iterations, and each iteration uses model saved in previous iteration. Generators were great help to prevent my machine to run out of memory.
+
+I generated additional data by using images from all cameras and flipping each image. Flipping each image (and negating its corresponding angle) prevented the model to be baised towards turning left.
+
+Adam optimizer is used, so I didn't have to worry about learning rate (one hyper-parameter less to tune).
+
 
 Creating a Great Writeup
 ---

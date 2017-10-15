@@ -18,13 +18,13 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 
-[image1]: ./examples/placeholder.png "Model Visualization"
+[image1]: ./examples/nVidia_model.png "Model Visualization"
 [image2]: ./examples/placeholder.png "Grayscaling"
-[image3]: ./examples/placeholder_small.png "Recovery Image"
-[image4]: ./examples/placeholder_small.png "Recovery Image"
+[image3]: ./examples/sampleImage.jpg "Sample Image"
+[image4]: ./examples/flippedImage.jpg "Flipped Image"
 [image5]: ./examples/placeholder_small.png "Recovery Image"
-[image6]: ./examples/placeholder_small.png "Normal Image"
-[image7]: ./examples/placeholder_small.png "Flipped Image"
+[image6]: ./examples/sampleImage.jpg "Normal Image"
+[image7]: ./examples/flippedImage.jpg "Flipped Image"
 
 ## Rubric Points
 ###Here I will consider the [rubric points](https://review.udacity.com/#!/rubrics/432/view) individually and describe how I addressed each point in my implementation.  
@@ -62,21 +62,30 @@ The generators turned out to pragmatic solution to prevent my machine running ou
 I have tried to reproduce model from  Nvidia (in model.py in function createNvidiaModel()) 
 | Layer                 |     Description                               |
 |:---------------------:|:---------------------------------------------:|
-| Input                 | 160x320x3 RGB image                             |
-| Convolution 5x5       | 1x1 stride, valid padding, outputs 28x28x20   |
+| Input                 | 160x320x3 BRG image                             |
+| Crop                 | 160x320x3 BRG image to 90x320x3 BRG image	  |
+| Normalization         | pixel varies between [-0.5,0.5]                             |
+| Convolution 5x5       | 2x2 stride, valid padding, outputs 43x158x24   |
 | RELU                  |                                               |
-| Droput                | 0.75                                          |
-| Convolution 5x5       | 1x1 stride, valid padding, outputs 10x10x30   |
+| Droput                | 0.5                                          |
+| Convolution 5x5       | 2x2 stride, valid padding, outputs 43x158x24   |
 | RELU                  |                                               |
-| Droput                | 0.75                                          |
-| Flatten               | outputs 750                                   |
-| Fully Connected Layer | outputs 250                                   |
+| Droput                | 0.5                                          |
+| Convolution 5x5       | 2x2 stride, valid padding, outputs 20x77x36   |
 | RELU                  |                                               |
-| Droput                | 0.75                                          |
-| Fully Connected Layer | outputs 100                                   |
+| Droput                | 0.5                                          |
+| Convolution 5x5       | 1x1 stride, valid padding, outputs 8x37x48   |
 | RELU                  |                                               |
-| Droput                | 0.75                                          |
-| Final Fully Connected Layer   | outputs 43                         |
+| Droput                | 0.5                                          |
+| Convolution 5x5       | 1x1 stride, valid padding, outputs 6x35x64   |
+| RELU                  |                                               |
+| Droput                | 0.5                                          |
+| Flatten               | outputs 8448                                   |
+| Fully Connected Layer | outputs 1164                                  |
+| Fully Connected Layer | outputs 100                                  |
+| Fully Connected Layer | outputs 50                                  |
+| Fully Connected Layer | outputs 1                                 |
+
 
 The model includes RELU layers to introduce nonlinearity, and the data is normalized in the model using a Keras lambda layer. 
 
@@ -121,9 +130,9 @@ At the end of the process, the vehicle is able to drive autonomously around the 
 
 The final model architecture (model.py) consisted of a convolution neural network with the following layers and layer sizes ...
 
-Here is a visualization of the architecture: (note: visualizing the architecture is optional according to the project rubric)
-[TODO: correct and add image of nvidia pipeline]
-![alt text][image1]
+Here is a visualization of the architecture:
+
+![Modified Nvidia Network][image1]
 
 #### 3. Creation of the Training Set & Training Process
 
@@ -138,8 +147,6 @@ To capture good driving behavior, I first recorded one lap on track one using ce
 ![alt text][image4]
 ![alt text][image5]
 
-Then I repeated this process on track two in order to get more data points.
-
 To augment the data set, I also flipped images and angles thinking that this would remove model's bias towards turning left almost all the time.
 
 For example, here is an image that has then been flipped:
@@ -149,8 +156,7 @@ For example, here is an image that has then been flipped:
 
 To increase the size of dataset without the need to record extra laps, I used images from left and right cameras as well. After, using all cameras and flipping every image, my dataset grew 6 times the original dataset.
 
-[TODO: write correct number of data points]
-After the collection process, I had X number of data points. I then preprocessed this data by cropping top 50 pixels (containing terrain, sky etc. irrelavant info to train model) and bottom 25 pixels (containing hood of the car).
+After the collection process, I had 11226 number of data points/(image,angle) pairs. I then preprocessed this data by cropping top 50 pixels (containing terrain, sky etc. irrelavant info to train model) and bottom 25 pixels (containing hood of the car).
 
 I finally randomly shuffled the data set and put 20% of the data into a validation set.
 
