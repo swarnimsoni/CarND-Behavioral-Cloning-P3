@@ -157,6 +157,8 @@ After the collection process, I had 11226 number of data points/(image,angle) pa
 
 I finally randomly shuffled the data set and put 20% of the data into a validation set.
 
-I used this training data for training the model. The validation set helped determine if the model was over or under fitting. The ideal number of epochs was 10 as evidenced by chart of training and validation loss.
+I used this training data for training the model. The validation set helped determine if the model was over or under fitting. I have trained the model in many sessions, each session ranging from 2 epochs to 3. This iterative approach was used to figure out, where my model is lacking after each iterations and relevant modifications were done in the code. Another reason for choosing to train in small sessions was limited computing resources. I trained the model on a machine with 8 GB ram and i7 Processor, without a GPU. So I couldn't wait for long time, running each session for large number of epochs.
+
+Overall I must have run my model for 30 epochs in total, however, each session had different parameters.
 
 I used an adam optimizer so that manually training the learning rate wasn't necessary.
