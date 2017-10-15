@@ -104,29 +104,11 @@ def createNVidiaModel(dropOutRate=0.5):
     return model
 
 
-#model = Sequential()
-
-# TODO: add image generators
-# TODO: flip images
-
-# TODO: crop images, use lowest reolution images also
-#60 pixels from top
-#25 pixels from below
-# before cropping, image size = (160,320)
-# after cropping,  image size = (135,260)
-#model.add(Cropping2D(cropping=((60,25),(0,0)), input_shape = (160,320,3)))
-# normalise the input images so that input values to NN varies from -0.5 to 0.5
-#model.add(Lambda(lambda x: x/255-0.5, input_shape = (160,320,3)))
-#model.add(Lambda(lambda x: x/255-0.5))
-#model.add(Flatten())
-#model.add(Dense(1))
-
 #model = createNVidiaModel()
 #model.compile(loss='mse', optimizer='adam')
 model = load_model('model.h5')
 #history_object= model.fit(X_train, y_train, validation_split=0.2, shuffle=True, nb_epoch=5,verbose=1)
 history_object=model.fit_generator(train_generator, samples_per_epoch= len(train_samples), validation_data=validation_generator, nb_val_samples=len(validation_samples), nb_epoch=3)
-
 
 # plot loss
 plt.plot(history_object.history['loss'])
