@@ -1,9 +1,5 @@
 # **Behavioral Cloning** 
 
-##Writeup Template
-
-###You can use this file as a template for your writeup if you want to submit it as a markdown file, but feel free to use some other method and submit a pdf if you prefer.
-
 ---
 
 **Behavioral Cloning Project**
@@ -60,6 +56,7 @@ The generators turned out to pragmatic solution to prevent my machine running ou
 #### 1. nVidia's model architecture has been employed
 
 I have tried to reproduce model from  Nvidia (in model.py in function createNvidiaModel()) 
+
 | Layer                 |     Description                               |
 |:---------------------:|:---------------------------------------------:|
 | Input                 | 160x320x3 BRG image                             |
@@ -74,10 +71,10 @@ I have tried to reproduce model from  Nvidia (in model.py in function createNvid
 | Convolution 5x5       | 2x2 stride, valid padding, outputs 20x77x36   |
 | RELU                  |                                               |
 | Droput                | 0.5                                          |
-| Convolution 5x5       | 1x1 stride, valid padding, outputs 8x37x48   |
+| Convolution 3x3       | 1x1 stride, valid padding, outputs 8x37x48   |
 | RELU                  |                                               |
 | Droput                | 0.5                                          |
-| Convolution 5x5       | 1x1 stride, valid padding, outputs 6x35x64   |
+| Convolution 3x3       | 1x1 stride, valid padding, outputs 6x35x64   |
 | RELU                  |                                               |
 | Droput                | 0.5                                          |
 | Flatten               | outputs 8448                                   |
