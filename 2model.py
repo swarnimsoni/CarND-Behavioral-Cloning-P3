@@ -4,10 +4,14 @@ import cv2
 import numpy as np
 import sklearn
 
+# benefit of using PIL library is that it read the image in RGB format,
+# and the simulator supplies the image to model in RGB format
+from PIL import Image
+
 samples=[]
 
 # read image paths and corresponding steering angles
-with open('./data/driving_log.csv') as csvfile:
+with open('./fastDriveData/driving_log.csv') as csvfile:
     reader = csv.reader(csvfile)
     for i_line in reader:
         samples.append(i_line)
@@ -18,11 +22,12 @@ from sklearn.model_selection import train_test_split
 train_samples, validation_samples = train_test_split(samples, test_size=0.2)
 
         
-# TODO: pre-allocate memory for steering angles and images, to improve memory effic
+# TODO: pre-allocate memory for steering angles and images, to improve memory efficiency
 steeringAngles=[]
 images = []
 baseDir = './data/IMG/'
-camera_correction_factor = 0.20
+baseDir = './fastDriveData/IMG/'
+camera_correction_factor = 0.18
 camera_angle_factor = [0,+1,-1]
 #for i_line in samples:        
 #    # use images from all cameras, center, left and right
@@ -31,7 +36,8 @@ camera_angle_factor = [0,+1,-1]
 #        # add steering angle according to which camera it came from i.e. center, left or right
 #        steeringAngles.append(float(i_line[3])+camera_correction_factor*camera_angle_factor[i])
 
-# this generator generates 6 times the batch size
+# this generator generates 6 times the batch size, if left and right camera images are used with flip
+# or it generates 2 times the batch size, if center images are used with flip
 def generator(samples, batch_size=32):
     num_samples = len(samples)
     while 1: # Loop forever so the generator never terminates
@@ -41,14 +47,18 @@ def generator(samples, batch_size=32):
             
             images, angles = [], []
             for batch_sample in batch_samples:
-
-                for i in range(3):
+                # do not use left and right camera images for now
+                for i in range(0,1):
                     name = baseDir+batch_sample[i].split('/')[-1]
-                    #images.append(cv2.cvtColor(cv2.imread(name), cv2.COLOR_BGR2RGB))
-                    i_image = cv2.imread(name)
 
-                    #cropp the image, crop top 50 and last 25 pixels vertically
-                    i_image = i_image[51:135,:]
+                    #images.append(cv2.cvtColor(cv2.imread(name), cv2.COLOR_BGR2RGB))
+
+                    #simulator send RGB images to model, so train on RGB images
+                    i_image = cv2.cvtColor(cv2.imread(name), cv2.COLOR_BGR2RGB)
+
+                    # trim image to only see section with road
+                    # crop the image, crop top 50 and last 25 pixels vertically
+                    i_image = i_image[51:135,:] 
 
                     # resize the image to 200 wide and 66 high
                     i_image = cv2.resize(i_image, (200, 66))
@@ -61,13 +71,14 @@ def generator(samples, batch_size=32):
                     images.append(i_image)
                     # add steering angle according to which camera it came from i.e. center, left or right
                     i_angle = float(i_line[3])+camera_correction_factor*camera_angle_factor[i]
+
                     angles.append(i_angle)
 
                     # add flipped images also
-                    images.append(np.fliplr(i_image))
-                    angles.append(-i_angle)
+#                    images.append(np.fliplr(i_image))
+#                    angles.append(-i_angle)
 
-                # trim image to only see section with road
+
                 X_train = np.array(images)
                 y_train = np.array(angles)
                 #print(X_train.size,y_train.size)
@@ -117,11 +128,13 @@ def createNVidiaModel2(dropOutRate=0.5):
 
 model = createNVidiaModel2()
 model.compile(loss='mse', optimizer='adam')
-#model = load_model('model.h5')
+saveModelTo = '3model.h5'
+#model = load_model(saveModelTo)
 #history_object= model.fit(X_train, y_train, validation_split=0.2, shuffle=True, nb_epoch=5,verbose=1)
 
-history_object=model.fit_generator(train_generator, samples_per_epoch= len(train_samples), validation_data=validation_generator, nb_val_samples=len(validation_samples), nb_epoch=1)
-model.save('2model.h5')
+
+history_object=model.fit_generator(train_generator, samples_per_epoch= len(train_samples), validation_data=validation_generator, nb_val_samples=len(validation_samples), nb_epoch=3)
+model.save(saveModelTo)
 # plot loss
 plt.plot(history_object.history['loss'])
 plt.plot(history_object.history['val_loss'])

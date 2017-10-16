@@ -151,7 +151,7 @@ For example, here is an image that has then been flipped:
 
 To increase the size of dataset without the need to record extra laps, I used images from left and right cameras as well. After, using all cameras and flipping every image, my dataset grew 6 times the original dataset.
 
-After the collection process, I had 11226 number of data points/(image,angle) pairs. I then preprocessed this data by cropping top 50 pixels (containing terrain, sky etc. irrelavant info to train model) and bottom 25 pixels (containing hood of the car).
+After the collection process, I had 11226 number of data points/(image,angle) pairs (3742 left, 3742 right and 3742 center images) . I then preprocessed this data by cropping top 50 pixels (containing terrain, sky etc. irrelavant info to train model) and bottom 25 pixels (containing hood of the car).
 
 I finally randomly shuffled the data set and put 20% of the data into a validation set.
 

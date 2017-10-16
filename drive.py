@@ -20,7 +20,8 @@ sio = socketio.Server()
 app = Flask(__name__)
 model = None
 prev_image_array = None
-
+sim_images_dir = './simImagesToModel/'
+counter = 0
 
 class SimplePIController:
     def __init__(self, Kp, Ki):
@@ -47,7 +48,6 @@ controller = SimplePIController(0.1, 0.002)
 set_speed = 9
 controller.set_desired(set_speed)
 
-
 @sio.on('telemetry')
 def telemetry(sid, data):
     if data:
@@ -64,6 +64,10 @@ def telemetry(sid, data):
         image = image.crop((0, 51, 320, 135))
         # resize the image to 66x200
         image = image.resize((200,66), Image.ANTIALIAS)
+
+        #same the image to debug
+#        image.save(sim_images_dir + 'temp.jpg')
+
         image_array = np.asarray(image)
         steering_angle = float(model.predict(image_array[None, :, :, :], batch_size=1))
 

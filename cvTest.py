@@ -25,10 +25,32 @@ name = '/home/manoj/Documents/SDC/CarND-Behavioral-Cloning-P3/examples/sampleIma
 #plt.savefig('./examples/flippedImage.jpg')
 #
 plt.figure()
-imgrgb = Image.open(name)
+img = Image.open(name)
+#img = img.crop((0, 51, 320, 135))
+#img = img.resize((200,66), Image.ANTIALIAS)
 plt.title('resized rgb image')
-plt.imshow(imgrgb)
+plt.imshow(img)
 plt.show()
+
+
+plt.figure()
+img = Image.open(name)
+img = img.crop((0, 51, 320, 135))
+#img = img.resize((200,66), Image.ANTIALIAS)
+plt.title('resized rgb image')
+plt.imshow(img)
+plt.show()
+
+
+plt.figure()
+img = Image.open(name)
+img = img.crop((0, 51, 320, 135))
+img = img.resize((200,66), Image.ANTIALIAS)
+plt.title('resized rgb image')
+plt.imshow(img)
+plt.show()
+
+print(np.array(img).size)
 #
 #print(np.array(imgrgb).size)
 
