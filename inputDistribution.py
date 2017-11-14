@@ -7,7 +7,7 @@ import matplotlib.pyplot as plt
 lines=[]
 
 # read image paths and corresponding steering angles
-with open('./data/driving_log.csv') as csvfile:
+with open('./fastDriveData/driving_log.csv') as csvfile:
     reader = csv.reader(csvfile)
     for i_line in reader:
         lines.append(i_line)
@@ -15,14 +15,15 @@ with open('./data/driving_log.csv') as csvfile:
 steeringAngles=[]
 
 baseDir = './data/IMG/'
-camera_correction_factor = 0.15
+camera_correction_factor = 0.12
 camera_angle_factor = [0,+1,-1]
 for i_line in lines:        
     # use images from all cameras, center, left and right
     for i in range(3):
         # add steering angle according to which camera it came from i.e. center, left or right
-        steeringAngles.append(float(i_line[3])+camera_correction_factor*camera_angle_factor[i])
-
+        i_angle = float(i_line[3])+camera_correction_factor*camera_angle_factor[i]
+        steeringAngles.append(i_angle)
+        steeringAngles.append(-i_angle)
 #convert images and steering angles into numpy arrays
 y_train = np.array(steeringAngles)
 

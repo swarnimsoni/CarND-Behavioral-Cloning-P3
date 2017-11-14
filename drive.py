@@ -60,10 +60,12 @@ def telemetry(sid, data):
         # The current image from the center camera of the car
         imgString = data["image"]
         image = Image.open(BytesIO(base64.b64decode(imgString)))
-        # crop the image
-        image = image.crop((0, 51, 320, 135))
-        # resize the image to 66x200
-        image = image.resize((200,66), Image.ANTIALIAS)
+
+#        if cropImage:
+#            # crop the image
+#            image = image.crop((0, 51, 320, 135))
+#            # resize the image to 66x200
+#            image = image.resize((200,66), Image.ANTIALIAS)
 
         #same the image to debug
 #        image.save(sim_images_dir + 'temp.jpg')
@@ -72,6 +74,7 @@ def telemetry(sid, data):
         steering_angle = float(model.predict(image_array[None, :, :, :], batch_size=1))
 
         throttle = controller.update(float(speed))
+        #throttle = 0.09
 
         print(steering_angle, throttle)
         send_control(steering_angle, throttle)
@@ -116,6 +119,13 @@ if __name__ == '__main__':
         default='',
         help='Path to image folder. This is where the images from the run will be saved.'
     )
+    parser.add_argument(
+        '--cropImage',
+        action='store_true',
+        default=False,
+        help='Path to image folder. This is where the images from the run will be saved.'
+    )
+        
     args = parser.parse_args()
 
     # check that model Keras version is same as local Keras version
