@@ -1,15 +1,18 @@
+from keras.models import Sequential, load_model
+from keras.layers import Lambda, Dense, Flatten, Cropping2D, Convolution2D, Dropout
+
 # replicate nVidia pipeline
-def createNVidiaModel(activation_function='elu', dropOutRate=0.0):
+def createNVidiaModel(activation_function='elu', dropOutRate=0.0, inputImageShape=(66,200,3)):
 
     model = Sequential()
 
     # add normalization and cropping layers
-    model.add(Cropping2D(cropping=((50,20),(0,0)), input_shape = (160,320,3)))
+    #model.add(Cropping2D(cropping=((50,20),(0,0)), input_shape = (160,320,3)))
 
     # resize images to 66*200
     #    model.add(Lambda(lambda x:
     # normalise the input images so that input values to NN varies from -0.5 to 0.5    
-    model.add(Lambda(lambda x: x/255-0.5))
+    model.add(Lambda(lambda x: x/255-0.5, input_shape = inputImageShape))
     model.add(Convolution2D(24,5,5, subsample=(2,2), activation=activation_function))
     model.add(Dropout(dropOutRate))    
     model.add(Convolution2D(36,5,5, subsample=(2,2), activation=activation_function))
@@ -30,17 +33,17 @@ def createNVidiaModel(activation_function='elu', dropOutRate=0.0):
     return model
 
 
-def smallerNVidiaModel(activation_function='elu', dropOutRate=0.0):
+def smallerNVidiaModel(activation_function='elu', dropOutRate=0.0, inputImageShape=(66,200,3)):
 
     model = Sequential()
 
     # add normalization and cropping layers
-    model.add(Cropping2D(cropping=((50,20),(0,0)), input_shape = (160,320,3)))
+    #model.add(Cropping2D(cropping=((50,20),(0,0)), input_shape = (160,320,3)))
 
     # resize images to 66*200
     #    model.add(Lambda(lambda x:
     # normalise the input images so that input values to NN varies from -0.5 to 0.5    
-    model.add(Lambda(lambda x: x/255-0.5))
+    model.add(Lambda(lambda x: x/255-0.5, input_shape = inputImageShape))
     model.add(Convolution2D(24,5,5, subsample=(2,2), activation=activation_function))
     model.add(Dropout(dropOutRate))    
     model.add(Convolution2D(36,5,5, subsample=(2,2), activation=activation_function))

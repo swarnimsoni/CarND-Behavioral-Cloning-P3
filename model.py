@@ -20,9 +20,9 @@ if __name__=='__main__':
     parser.add_argument('--modelFile',
                         action ='store',
                         type=str)
-    parser.add_argument('--modelId',
-                        action ='store',
-                        type=int)
+#    parser.add_argument('--modelId',
+#                        action ='store',
+#                        type=int)
     parser.add_argument('--newModel',
                         action ='store_true',
                         default=False)
@@ -32,21 +32,24 @@ if __name__=='__main__':
     args = parser.parse_args()
     
     if args.newModel:
-        model = createNVidiaModel()
+        model = smallerNVidiaModel()
+#createNVidiaModel()
         model.compile(loss='mse', optimizer='adam')
     else:
         model = load_model(args.modelFile)
 
-    dataDir = './fastDriveData/'
+#    dataDir = './fastDriveData/'
+    dataDir = './myCapturedData/'
 
-    samples = getCsvLines(dataDir+'/driving_log.csv')
+    samples = prepareTrainingData(dataDir+'/driving_log.csv', useAllCameraImages=True)
     train_samples, validation_samples = train_test_split(samples, test_size=0.2)
 
     # compile and train the model using the generator function
-    train_generator = generator(train_samples, batch_size=32)
-    validation_generator = generator(validation_samples, batch_size=32)
+    colorSpace='RGB'
+    train_generator      = generator(train_samples,      dataDir, batch_size=32, color_space=colorSpace, useFlipImages=True)
+    validation_generator = generator(validation_samples, dataDir, batch_size=32, color_space='RGB', useFlipImages=True)
 
-    history_object=model.fit_generator(train_generator, samples_per_epoch= len(train_samples)*6, validation_data=validation_generator, nb_val_samples=len(validation_samples)*6, nb_epoch=1)
+    history_object=model.fit_generator(train_generator, samples_per_epoch= len(train_samples)*2, validation_data=validation_generator, nb_val_samples=len(validation_samples)*2, nb_epoch=3)
     model.save(args.modelFile)
 
     # plot loss validation and training
@@ -57,5 +60,5 @@ if __name__=='__main__':
     plt.xlabel('epoch')
     plt.legend(['training set', 'validation set'], loc='upper right')
     plt.show()
-    print(model.summary())
 
+    print(model.summary())

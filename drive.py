@@ -61,11 +61,11 @@ def telemetry(sid, data):
         imgString = data["image"]
         image = Image.open(BytesIO(base64.b64decode(imgString)))
 
-#        if cropImage:
-#            # crop the image
-#            image = image.crop((0, 51, 320, 135))
-#            # resize the image to 66x200
-#            image = image.resize((200,66), Image.ANTIALIAS)
+        if False:
+            # crop the image
+            image = image.crop((0, 51, 320, 135))
+            # resize the image to 66x200
+            image = image.resize((200,66), Image.ANTIALIAS)
 
         #same the image to debug
 #        image.save(sim_images_dir + 'temp.jpg')
@@ -106,6 +106,7 @@ def send_control(steering_angle, throttle):
 
 
 if __name__ == '__main__':
+
     parser = argparse.ArgumentParser(description='Remote Driving')
     parser.add_argument(
         'model',
@@ -128,6 +129,7 @@ if __name__ == '__main__':
         
     args = parser.parse_args()
 
+    cropImage = args.cropImage
     # check that model Keras version is same as local Keras version
     f = h5py.File(args.model, mode='r')
     model_version = f.attrs.get('keras_version')
