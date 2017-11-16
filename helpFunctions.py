@@ -32,8 +32,7 @@ def prepareTrainingData(path, useAllCameraImages=False, cameraCorrectionFactor =
             i_imagePath = i_line[i].split('/')[-1]
             imagePaths.append(i_imagePath)
             i_angle = float(i_line[3])+cameraCorrectionFactor*camera_angle_factor[i]
-            angles.append(i_angle)
-        
+            angles.append(i_angle)        
 
     samples = list(zip(imagePaths, angles))
     return samples
@@ -54,7 +53,7 @@ def generator(samples, dataDir, batch_size=32,color_space='RGB', useFlipImages=F
                 i_image = cv2.imread(baseDir+i_imagePath)
                 #print(name)
                 # crop the image
-                i_image = i_image[51:140,:]
+                i_image = i_image[51:141,:]
                 
                 # resize the image to 66 by 200
                 i_image = cv2.resize(i_image, (200, 66))
@@ -71,7 +70,6 @@ def generator(samples, dataDir, batch_size=32,color_space='RGB', useFlipImages=F
                     i_image = cv2.cvtColor(i_image, cv2.COLOR_BGR2YUV)
                 elif color_space == 'YCrCb':
                     i_image = cv2.cvtColor(i_image, cv2.COLOR_BGR2YCrCb)
-
                         
                 images.append(i_image)
                 # add steering angle according to which camera it came from i.e. center, left or right
@@ -86,5 +84,6 @@ def generator(samples, dataDir, batch_size=32,color_space='RGB', useFlipImages=F
                 # trim image to only see section with road
                 X_train = np.array(images)
                 y_train = np.array(angles)
+
                 #print(X_train.size,y_train.size)
                 yield sklearn.utils.shuffle(X_train, y_train)

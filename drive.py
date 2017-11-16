@@ -45,7 +45,9 @@ class SimplePIController:
 
 
 controller = SimplePIController(0.1, 0.002)
-set_speed = 9
+set_speed = 12
+#set_speed = 9
+#set_speed = 6
 controller.set_desired(set_speed)
 
 @sio.on('telemetry')
@@ -61,9 +63,9 @@ def telemetry(sid, data):
         imgString = data["image"]
         image = Image.open(BytesIO(base64.b64decode(imgString)))
 
-        if False:
+        if True:
             # crop the image
-            image = image.crop((0, 51, 320, 135))
+            image = image.crop((0, 51, 320, 140))
             # resize the image to 66x200
             image = image.resize((200,66), Image.ANTIALIAS)
 
@@ -120,16 +122,16 @@ if __name__ == '__main__':
         default='',
         help='Path to image folder. This is where the images from the run will be saved.'
     )
-    parser.add_argument(
-        '--cropImage',
-        action='store_true',
-        default=False,
-        help='Path to image folder. This is where the images from the run will be saved.'
-    )
+#    parser.add_argument(
+#        '--cropImage',
+#        action='store_true',
+#        default=False,
+#        help='Path to image folder. This is where the images from the run will be saved.'
+#    )
         
     args = parser.parse_args()
 
-    cropImage = args.cropImage
+#    cropImage = args.cropImage
     # check that model Keras version is same as local Keras version
     f = h5py.File(args.model, mode='r')
     model_version = f.attrs.get('keras_version')
