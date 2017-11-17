@@ -46,19 +46,19 @@ if __name__=='__main__':
 
     # compile and train the model using the generator function
     colorSpace='RGB'
-    train_generator      = generator(train_samples,      dataDir, batch_size=32, color_space=colorSpace, useFlipImages=True)
-    validation_generator = generator(validation_samples, dataDir, batch_size=32, color_space=colorSpace, useFlipImages=True)
+#    train_generator      = generator(train_samples,      dataDir, batch_size=32, color_space=colorSpace, useFlipImages=True)
+#    validation_generator = generator(validation_samples, dataDir, batch_size=32, color_space=colorSpace, useFlipImages=True)
 
-    history_object=model.fit_generator(train_generator, samples_per_epoch= len(train_samples)*2, validation_data=validation_generator, nb_val_samples=len(validation_samples)*2, nb_epoch=3)
-    model.save(args.modelFile)
+#    history_object=model.fit_generator(train_generator, samples_per_epoch= len(train_samples)*2, validation_data=validation_generator, nb_val_samples=len(validation_samples)*2, nb_epoch=3)
+#    model.save(args.modelFile)
 
     # plot loss validation and training
-    plt.plot(history_object.history['loss'])
-    plt.plot(history_object.history['val_loss'])
-    plt.title('model mean squared error loss')
-    plt.ylabel('mean squared error loss')
-    plt.xlabel('epoch')
-    plt.legend(['training set', 'validation set'], loc='upper right')
-    plt.show()
+#    plt.plot(history_object.history['loss'])
+#    plt.plot(history_object.history['val_loss'])
+#    plt.title('model mean squared error loss')
+#    plt.ylabel('mean squared error loss')
+#    plt.xlabel('epoch')
+#    plt.legend(['training set', 'validation set'], loc='upper right')
+#    plt.show()
 
     print(model.summary())
